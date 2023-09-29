@@ -1,0 +1,10 @@
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    password: ${ENCRYPTION_PASSWORD:}
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+
+
+bot.name: newInfoJava_bot
+bot.token: ENC(OepDFUKw/B/0x6qziWcrIIDQuoDyjXjHgfJbzyFKckkiU465R0IWIZP5WW83ZRNpsjAyhYxfTHw=)
