@@ -8,3 +8,14 @@ jasypt:
 
 bot.name: newInfoJava_bot
 bot.token: ENC(OepDFUKw/B/0x6qziWcrIIDQuoDyjXjHgfJbzyFKckkiU465R0IWIZP5WW83ZRNpsjAyhYxfTHw=)
+
+logging:
+  level:
+    root: "info"
+  file:
+    name: logfile.log
+
+
+logback:
+   rollingpolicy:
+     total-size-cap: 10

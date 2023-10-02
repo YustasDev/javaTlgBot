@@ -5,7 +5,9 @@ import com.example.javatlgbot.model.CurrencyModel;
 import com.example.javatlgbot.model.Valute;
 import com.example.javatlgbot.service.CurrencyService;
 import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -23,12 +25,11 @@ import java.util.Calendar;
 
 @Component
 @AllArgsConstructor
-@Log4j2
+@Log
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
     private static final Logger LOGGER = LogManager.getLogger(TelegramBot.class);
-    Marker input_error = MarkerManager.getMarker("input_error");
 
     @Override
     public String getBotUsername() {
@@ -80,7 +81,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         else {
                             //String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
                             String current_error = "Currency designation has been introduced: " + messageText;
-                            LOGGER.error(input_error, current_error);
+                            LOGGER.error(current_error);
                             throw new IOException("The specified currency type was not found");
                         }
                     } catch (IOException e) {
