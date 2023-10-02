@@ -3,7 +3,7 @@ package com.example.javatlgbot.model;
 import lombok.Data;
 
 @Data
-public class USD {
+public class CNY {
     public String ID;
     public String NumCode;
     public String CharCode;

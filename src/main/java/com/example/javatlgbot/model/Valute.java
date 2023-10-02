@@ -1,6 +1,10 @@
 package com.example.javatlgbot.model;
 
+import lombok.Data;
+
+@Data
 public class Valute {
-    public USD usd;
-    public EUR eur;
+    public USD USD;
+    public EUR EUR;
+    public CNY CNY;
 }
