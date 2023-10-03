@@ -11,11 +11,18 @@ bot.token: ENC(OepDFUKw/B/0x6qziWcrIIDQuoDyjXjHgfJbzyFKckkiU465R0IWIZP5WW83ZRNps
 
 logging:
   level:
-    root: "info"
+    root: "error"
   file:
     name: logfile.log
+
+
+
+
+
 
 
 logback:
    rollingpolicy:
      total-size-cap: 10
+
+
