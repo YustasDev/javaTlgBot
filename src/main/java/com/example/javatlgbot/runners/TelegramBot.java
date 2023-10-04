@@ -56,6 +56,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "/start":
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     break;
+                case "/music":
+                    startMusic(chatId, update.getMessage().getChat().getFirstName());
+
+                    break;
                 default:
                     try {
                         CurrencyModel currencyRate = CurrencyService.getCurrencyRate(messageText, currencyModel);
@@ -84,6 +88,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         else if(messageText.equals("PIC")){
                               File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
                               InputFile img = new InputFile(sourceimage);
+                              sendMessage(chatId, "Einstein looks at you reproachfully");
                               sendImg(chatId, img);
                               return;
                         }
@@ -111,7 +116,16 @@ public class TelegramBot extends TelegramLongPollingBot {
         String answer = "Hi, " + name + ", nice to meet you!" + "\n" +
                 "Enter the currency whose official exchange rate" + "\n" +
                 "you want to know in relation to RUB." + "\n" +
-                "For example: USD, EUR or CNY";
+                "For example: USD, EUR or CNY " + "\n" +
+                "but if you just want to listen to music, you can click '/music'";
+        sendMessage(chatId, answer);
+    }
+
+    private void startMusic(Long chatId, String name) {
+        String answer = "Hi, " + name + ", nice to meet you!" + "\n" +
+                "I'm glad you love music!" + "\n" +
+                "What kind of music do you want to listen to?" + "\n" +
+                "For example: rock, blues or classical";
         sendMessage(chatId, answer);
     }
 
