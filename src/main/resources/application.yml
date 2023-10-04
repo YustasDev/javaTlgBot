@@ -16,11 +16,6 @@ logging:
     name: logfile.log
 
 
-
-
-
-
-
 logback:
    rollingpolicy:
      total-size-cap: 10

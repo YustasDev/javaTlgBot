@@ -10,14 +10,17 @@ import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,6 +81,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     + " for " + currencyRate.getValute().getCNY().getNominal() + " "
                                     + currencyRate.getValute().getCNY().getName() + "\n";
                         }
+                        else if(messageText.equals("PIC")){
+                              File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
+                              InputFile img = new InputFile(sourceimage);
+                              sendImg(chatId, img);
+                              return;
+                        }
                         else {
                             //String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
                             String current_error = "Currency designation has been introduced: " + messageText;
@@ -117,5 +126,18 @@ public class TelegramBot extends TelegramLongPollingBot {
             LOGGER.error(e.getStackTrace());
         }
     }
+
+    private void sendImg(Long chatId, InputFile img) {
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(String.valueOf(chatId));
+        sendPhoto.setPhoto(img);
+        try {
+            execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+            LOGGER.error(e.getStackTrace());
+        }
+    }
+
 
 }
