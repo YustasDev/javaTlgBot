@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class BotConfig {
 
-    final String botName;
-    final String token;
+    final private String botName;
+    final private String token;
 
     @Autowired
     public BotConfig(@Value("${bot.name}") String botName, @Value("${bot.token}") String token) {

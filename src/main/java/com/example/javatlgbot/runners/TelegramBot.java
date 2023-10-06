@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -28,11 +29,13 @@ import java.util.Calendar;
 
 @Component
 @AllArgsConstructor
-@Log
+@Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
 
+    @Autowired
     private final BotConfig botConfig;
-    private static final Logger LOGGER = LogManager.getLogger(TelegramBot.class);
+    @Autowired
+    private CurrencyModel currencyModel;
 
     @Override
     public String getBotUsername() {
@@ -46,7 +49,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        CurrencyModel currencyModel = new CurrencyModel();
         String currency = "";
 
         if(update.hasMessage() && update.getMessage().hasText()){
@@ -58,7 +60,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
                 case "/music":
                     startMusic(chatId, update.getMessage().getChat().getFirstName());
-
                     break;
                 default:
                     try {
@@ -85,17 +86,24 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     + " for " + currencyRate.getValute().getCNY().getNominal() + " "
                                     + currencyRate.getValute().getCNY().getName() + "\n";
                         }
-                        else if(messageText.equals("PIC")){
-                              File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
-                              InputFile img = new InputFile(sourceimage);
-                              sendMessage(chatId, "Einstein looks at you reproachfully");
-                              sendImg(chatId, img);
-                              return;
+//                        else if(messageText.equals("PIC")){
+//                              File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
+//                              InputFile img = new InputFile(sourceimage);
+//                              sendMessage(chatId, "Einstein looks at you reproachfully");
+//                              sendImg(chatId, img);
+//                              return;
+//                        }
+                        else if(messageText.equals("rock") || messageText.equals("blues") || messageText.equals("classical")) {
+                            currency = "click on the button: " + "https://t.me/KDMusic_Bot";
                         }
+//                        else {
+//                            currency = "That is, do you not like rock, blues and classical music? Well ok.." + "\n"
+//                                    + "click on the button: " + "https://t.me/lightmusic2bot";
+//                        }
                         else {
                             //String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
                             String current_error = "Currency designation has been introduced: " + messageText;
-                            LOGGER.error(current_error);
+                            log.error(current_error);
                             throw new IOException("The specified currency type was not found");
                         }
                     } catch (IOException e) {
@@ -103,8 +111,13 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 "Enter the currency whose official exchange rate" + "\n" +
                                 "you want to know in relation to RUB." + "\n" +
                                 "For example: USD, EUR or CNY");
+                        File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
+                        InputFile img = new InputFile(sourceimage);
+                        currency = "And you don't like rock, blues and classical music..." + "\n" +
+                                   " Einstein looks at you reproachfully";
+                        sendImg(chatId, img);
                     } catch (ParseException e) {
-                        LOGGER.error(e.getStackTrace());
+                        log.error(String.valueOf(e.getStackTrace()));
                         throw new RuntimeException("Unable to parse date");
                     }
                     sendMessage(chatId, currency);
@@ -118,6 +131,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 "you want to know in relation to RUB." + "\n" +
                 "For example: USD, EUR or CNY " + "\n" +
                 "but if you just want to listen to music, you can click '/music'";
+        log.info("The name of the logged in user: " + name);
         sendMessage(chatId, answer);
     }
 
@@ -137,7 +151,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
-            LOGGER.error(e.getStackTrace());
+            log.error(String.valueOf(e.getStackTrace()));
         }
     }
 
@@ -149,7 +163,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             execute(sendPhoto);
         } catch (TelegramApiException e) {
             e.printStackTrace();
-            LOGGER.error(e.getStackTrace());
+            log.error(String.valueOf(e.getStackTrace()));
         }
     }
 
