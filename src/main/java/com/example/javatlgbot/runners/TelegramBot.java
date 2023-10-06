@@ -4,6 +4,7 @@ import com.example.javatlgbot.config.BotConfig;
 import com.example.javatlgbot.model.CurrencyModel;
 import com.example.javatlgbot.model.Valute;
 import com.example.javatlgbot.service.CurrencyService;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
@@ -113,9 +114,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 "For example: USD, EUR or CNY");
                         File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
                         InputFile img = new InputFile(sourceimage);
-                        currency = "And you don't like rock, blues and classical music..." + "\n" +
-                                   " Einstein looks at you reproachfully";
+                        currency = "And you don't like rock, blues and classical music..." + "\n\n" +
+                                   "Einstein looks at you reproachfully" + " :cry:";
+                        String answer = EmojiParser.parseToUnicode(currency);
+                        sendMessage(chatId, answer);
                         sendImg(chatId, img);
+                        break;
                     } catch (ParseException e) {
                         log.error(String.valueOf(e.getStackTrace()));
                         throw new RuntimeException("Unable to parse date");
@@ -126,11 +130,17 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void startCommandReceived(Long chatId, String name) {
-        String answer = "Hi, " + name + ", nice to meet you!" + "\n" +
+        String answer = EmojiParser.parseToUnicode("Hi, " + name + ", nice to meet you!" + "\n" +
                 "Enter the currency whose official exchange rate" + "\n" +
                 "you want to know in relation to RUB." + "\n" +
-                "For example: USD, EUR or CNY " + "\n" +
-                "but if you just want to listen to music, you can click '/music'";
+                "For example: USD, EUR or CNY " + "\n\n" +
+                "But if you just want to listen to music, you can click '/music'" + " :grinning:");
+
+//        String answer = "Hi, " + name + ", nice to meet you!" + "\n" +
+//                "Enter the currency whose official exchange rate" + "\n" +
+//                "you want to know in relation to RUB." + "\n" +
+//                "For example: USD, EUR or CNY " + "\n" +
+//                "but if you just want to listen to music, you can click '/music'";
         log.info("The name of the logged in user: " + name);
         sendMessage(chatId, answer);
     }
