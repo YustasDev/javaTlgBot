@@ -5,6 +5,8 @@ import com.example.javatlgbot.model.CurrencyModel;
 import com.example.javatlgbot.model.EUR;
 import com.example.javatlgbot.model.Valute;
 import com.google.gson.Gson;
+import com.vdurmont.emoji.EmojiParser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 @Service
+@Slf4j
 public class CurrencyService {
 
     public static CurrencyModel getCurrencyRate(String message, CurrencyModel model) throws IOException, ParseException {
@@ -29,4 +32,5 @@ public class CurrencyService {
 
         return currencyModel;
     }
+
 }

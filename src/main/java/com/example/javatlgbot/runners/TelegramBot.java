@@ -2,6 +2,8 @@ package com.example.javatlgbot.runners;
 
 import com.example.javatlgbot.config.BotConfig;
 import com.example.javatlgbot.model.CurrencyModel;
+import com.example.javatlgbot.model.User;
+import com.example.javatlgbot.repository.UserRepository;
 import com.example.javatlgbot.service.CurrencyService;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -24,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -34,6 +38,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig botConfig;
     @Autowired
     private CurrencyModel currencyModel;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public String getBotUsername() {
@@ -52,12 +58,17 @@ public class TelegramBot extends TelegramLongPollingBot {
         if(update.hasMessage() && update.getMessage().hasText()){
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
+            String userName = update.getMessage().getChat().getFirstName();
             switch (messageText){
                 case "/start":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
+                    startCommandReceived(chatId, userName);
+                    registerUser(update.getMessage());
+                    break;
+                case "/help":
+                    helpAnswer(chatId, userName);
                     break;
                 case "/music":
-                    startMusic(chatId, update.getMessage().getChat().getFirstName());
+                    startMusic(chatId, userName);
                     break;
                 default:
                     try {
@@ -85,7 +96,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     + currencyRate.getValute().getCNY().getName() + "\n";
                         }
                         else {
-                            //String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
                             String current_error = "Currency designation has been introduced: " + messageText;
                             log.error(current_error);
                             throw new IOException("The specified currency type was not found");
@@ -122,19 +132,51 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getCallbackQuery().getMessage().getChatId();
 
             if (callbackData.equals("rock")) {
-                String text = "You pressed ROCK button";
+                String text = "It's wonderful that you love ROCK!";
                 executeEditMessageText(text, chatId, messageId);
             }
             else if (callbackData.equals("blues")) {
-                String text = "You pressed BLUES button";
+                String text = "It's wonderful that you love BLUES!";
                 executeEditMessageText(text, chatId, messageId);
             }
             else if (callbackData.equals("classical")) {
-                String text = "You pressed CLASSICAL button";
+                String text = "It's wonderful that you love classical music!";
                 executeEditMessageText(text, chatId, messageId);
             }
             currency = "click on the button: " + "https://t.me/lightmusic2bot";
             sendMessage(chatId, currency);
+        }
+
+    }
+
+    private void helpAnswer(Long chatId, String name){
+        String answer = EmojiParser.parseToUnicode("Hey, " + name + "\n" +
+                "I don't even know how to help you... " + "\n" +
+                "just push all the buttons and you'll figure it out for yourself" + "\n" +
+                " :bulb:");
+        sendMessage(chatId, answer);
+    }
+
+
+    private void registerUser(Message message) {
+        try {
+        Optional <User> user = userRepository.findById(message.getChatId());
+        if(!user.isPresent()) {
+            var chatId = message.getChatId();
+            var chat = message.getChat();
+
+            User new_user = new User();
+            new_user.setChatId(chatId);
+            new_user.setFirstName(chat.getFirstName());
+            new_user.setLastName(chat.getLastName());
+            new_user.setUserName(chat.getUserName());
+            String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
+            new_user.setRegisterDate(timeStamp);
+            userRepository.save(new_user);
+        }
+      }
+        catch (Exception e){
+            log.error("The error occurred while saving the new User: " + e.getMessage());
         }
 
     }

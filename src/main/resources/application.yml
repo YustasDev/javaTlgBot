@@ -9,6 +9,17 @@ jasypt:
 bot.name: newInfoJava_bot
 bot.token: ENC(OepDFUKw/B/0x6qziWcrIIDQuoDyjXjHgfJbzyFKckkiU465R0IWIZP5WW83ZRNpsjAyhYxfTHw=)
 
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/infoBot
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 
 
 #logging:
