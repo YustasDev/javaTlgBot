@@ -2,31 +2,28 @@ package com.example.javatlgbot.runners;
 
 import com.example.javatlgbot.config.BotConfig;
 import com.example.javatlgbot.model.CurrencyModel;
-import com.example.javatlgbot.model.Valute;
 import com.example.javatlgbot.service.CurrencyService;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.AllArgsConstructor;
-import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -87,20 +84,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                                     + " for " + currencyRate.getValute().getCNY().getNominal() + " "
                                     + currencyRate.getValute().getCNY().getName() + "\n";
                         }
-//                        else if(messageText.equals("PIC")){
-//                              File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
-//                              InputFile img = new InputFile(sourceimage);
-//                              sendMessage(chatId, "Einstein looks at you reproachfully");
-//                              sendImg(chatId, img);
-//                              return;
-//                        }
-                        else if(messageText.equals("rock") || messageText.equals("blues") || messageText.equals("classical")) {
-                            currency = "click on the button: " + "https://t.me/KDMusic_Bot";
-                        }
-//                        else {
-//                            currency = "That is, do you not like rock, blues and classical music? Well ok.." + "\n"
-//                                    + "click on the button: " + "https://t.me/lightmusic2bot";
-//                        }
                         else {
                             //String timeStamp = new SimpleDateFormat("MM/dd/yyyy_HH:mm:ss").format(Calendar.getInstance().getTime());
                             String current_error = "Currency designation has been introduced: " + messageText;
@@ -114,9 +97,15 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 "For example: USD, EUR or CNY");
                         File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
                         InputFile img = new InputFile(sourceimage);
-                        currency = "And you don't like rock, blues and classical music..." + "\n\n" +
-                                   "Einstein looks at you reproachfully" + " :cry:";
+                        currency = "And you don't like rock, blues and classical music... Well ok.." + "\n\n" +
+                                   "But Einstein looks at you reproachfully" + " :cry:";
                         String answer = EmojiParser.parseToUnicode(currency);
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                            log.error("The error occurred while executing 'Thread.sleep': " + e.getMessage());
+                        }
                         sendMessage(chatId, answer);
                         sendImg(chatId, img);
                         break;
@@ -127,7 +116,43 @@ public class TelegramBot extends TelegramLongPollingBot {
                     sendMessage(chatId, currency);
             }
         }
+        else if (update.hasCallbackQuery()) {
+            String callbackData = update.getCallbackQuery().getData();
+            long messageId = update.getCallbackQuery().getMessage().getMessageId();
+            long chatId = update.getCallbackQuery().getMessage().getChatId();
+
+            if (callbackData.equals("rock")) {
+                String text = "You pressed ROCK button";
+                executeEditMessageText(text, chatId, messageId);
+            }
+            else if (callbackData.equals("blues")) {
+                String text = "You pressed BLUES button";
+                executeEditMessageText(text, chatId, messageId);
+            }
+            else if (callbackData.equals("classical")) {
+                String text = "You pressed CLASSICAL button";
+                executeEditMessageText(text, chatId, messageId);
+            }
+            currency = "click on the button: " + "https://t.me/lightmusic2bot";
+            sendMessage(chatId, currency);
+        }
+
     }
+
+    private void executeEditMessageText(String text, long chatId, long messageId){
+        EditMessageText message = new EditMessageText();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(text);
+        message.setMessageId((int) messageId);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            log.error("The error occurred in the 'executeEditMessageText' method: " + e.getMessage());
+        }
+    }
+
+
 
     private void startCommandReceived(Long chatId, String name) {
         String answer = EmojiParser.parseToUnicode("Hi, " + name + ", nice to meet you!" + "\n" +
@@ -136,21 +161,49 @@ public class TelegramBot extends TelegramLongPollingBot {
                 "For example: USD, EUR or CNY " + "\n\n" +
                 "But if you just want to listen to music, you can click '/music'" + " :grinning:");
 
-//        String answer = "Hi, " + name + ", nice to meet you!" + "\n" +
-//                "Enter the currency whose official exchange rate" + "\n" +
-//                "you want to know in relation to RUB." + "\n" +
-//                "For example: USD, EUR or CNY " + "\n" +
-//                "but if you just want to listen to music, you can click '/music'";
         log.info("The name of the logged in user: " + name);
         sendMessage(chatId, answer);
     }
 
     private void startMusic(Long chatId, String name) {
-        String answer = "Hi, " + name + ", nice to meet you!" + "\n" +
-                "I'm glad you love music!" + "\n" +
+        String answer = name + " I'm glad you love music!" + "\n" +
                 "What kind of music do you want to listen to?" + "\n" +
                 "For example: rock, blues or classical";
-        sendMessage(chatId, answer);
+
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(answer);
+
+        InlineKeyboardMarkup markupInLine = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInLine = new ArrayList<>();
+        List<InlineKeyboardButton> rowInLine = new ArrayList<>();
+        var rock_Button = new InlineKeyboardButton();
+        rock_Button.setText("ROCK");
+        rock_Button.setCallbackData("rock");
+
+        var blues_Button = new InlineKeyboardButton();
+        blues_Button.setText("BLUES");
+        blues_Button.setCallbackData("blues");
+
+        var classical_Button = new InlineKeyboardButton();
+        classical_Button.setText("CLASSICAL");
+        classical_Button.setCallbackData("classical");
+
+        rowInLine.add(rock_Button);
+        rowInLine.add(blues_Button);
+        rowInLine.add(classical_Button);
+
+        rowsInLine.add(rowInLine);
+
+        markupInLine.setKeyboard(rowsInLine);
+        message.setReplyMarkup(markupInLine);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+            log.error("An error occurred when sending a message from the 'startMusic' method: " + e.getMessage());
+        }
     }
 
     private void sendMessage(Long chatId, String textToSend){
