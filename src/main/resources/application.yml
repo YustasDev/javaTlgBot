@@ -8,6 +8,7 @@ jasypt:
 
 bot.name: newInfoJava_bot
 bot.token: ENC(OepDFUKw/B/0x6qziWcrIIDQuoDyjXjHgfJbzyFKckkiU465R0IWIZP5WW83ZRNpsjAyhYxfTHw=)
+bot.ownerID: 994138843
 
 spring:
   datasource:

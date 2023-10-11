@@ -59,6 +59,16 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
             String userName = update.getMessage().getChat().getFirstName();
+
+            if(messageText.contains("/dispatch") && botConfig.getOwnerID() == chatId) {
+                var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));
+                var users = userRepository.findAll();
+                for (User user: users){
+                    prepareAndSendMessage(user.getChatId(), textToSend);
+                    return;
+                }
+            }
+
             switch (messageText){
                 case "/start":
                     startCommandReceived(chatId, userName);
@@ -147,6 +157,18 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendMessage(chatId, currency);
         }
 
+    }
+
+    private void prepareAndSendMessage(Long chatId, String textToSend) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(textToSend);
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+            log.error("The error occurred in the 'prepareAndSendMessage' method: " + e.getMessage());
+        }
     }
 
     private void helpAnswer(Long chatId, String name){
