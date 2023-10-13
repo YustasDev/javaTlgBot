@@ -115,7 +115,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 "Enter the currency whose official exchange rate" + "\n" +
                                 "you want to know in relation to RUB." + "\n" +
                                 "For example: USD, EUR or CNY");
-                        File sourceimage = new File("/home/progforce/Pictures/Ein2.jpg");
+                        File sourceimage = new File("Ein2.jpg");
                         InputFile img = new InputFile(sourceimage);
                         currency = "And you don't like rock, blues and classical music... Well ok.." + "\n\n" +
                                    "But Einstein looks at you reproachfully" + " :cry:";
