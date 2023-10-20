@@ -26,6 +26,12 @@ public class BotInitializer {
         } catch (TelegramApiException e){
             e.printStackTrace();
             log.error("An error occurred while initializing the bot: " + e.getMessage());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            init();
         }
     }
 }

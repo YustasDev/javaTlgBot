@@ -22,16 +22,3 @@ spring:
     show-sql: true
 
 
-
-#logging:
-#  level:
-#    root: "error"
-#  file:
-#    name: logfile.log
-#
-#
-#logback:
-#   rollingpolicy:
-#     total-size-cap: 10
-
-

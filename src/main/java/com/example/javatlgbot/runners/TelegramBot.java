@@ -59,6 +59,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
             String userName = update.getMessage().getChat().getFirstName();
+          //  Object location = update.getMessage().getLocation();
 
             if(messageText.contains("/dispatch") && botConfig.getOwnerID() == chatId) {
                 var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));
