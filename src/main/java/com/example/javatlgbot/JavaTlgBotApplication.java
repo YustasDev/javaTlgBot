@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JavaTlgBotApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(JavaTlgBotApplication.class, args);
 
     }
