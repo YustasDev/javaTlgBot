@@ -8,9 +8,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class JavaTlgBotApplication {
 
+
+    private static String crypto;
+    private static String token;
+
+
     public static void main(String[] args) {
         SpringApplication.run(JavaTlgBotApplication.class, args);
-
     }
 
 }

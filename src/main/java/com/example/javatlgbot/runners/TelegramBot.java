@@ -154,7 +154,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 String text = "It's wonderful that you love classical music!";
                 executeEditMessageText(text, chatId, messageId);
             }
-            currency = "click on the button: " + "https://t.me/lightmusic2bot";
+            currency = "click on the button: " + "https://t.me/Mixvk_bot";
             sendMessage(chatId, currency);
         }
 

@@ -7,7 +7,7 @@ jasypt:
 
 
 bot.name: newInfoJava_bot
-bot.token: ENC(OepDFUKw/B/0x6qziWcrIIDQuoDyjXjHgfJbzyFKckkiU465R0IWIZP5WW83ZRNpsjAyhYxfTHw=)
+bot.token: ENC(YRtNKQERH8ViRyCbqCBhWo6DDmKQtiqazLKMDT0f6YMsYWmhmiNMscb03fYY3Y67Jr6fG1waEtI=)
 bot.ownerID: 994138843
 
 
@@ -17,7 +17,7 @@ spring:
     #url: jdbc:postgresql://127.0.0.1:5432/infoBot
     url: jdbc:postgresql://${DB_HOST:127.0.0.1}:5432/infoBot
     username: postgres
-    password: ENC(meZs5HRHLgkbTC6tnK5Yur/vzTwczaNM)
+    password: ENC(GSTv7LWJ0tOhw+chfitIkKnSUSsIFrnL)
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
