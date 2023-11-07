@@ -4,6 +4,7 @@ import com.example.javatlgbot.config.BotConfig;
 import com.example.javatlgbot.model.CurrencyModel;
 import com.example.javatlgbot.model.User;
 import com.example.javatlgbot.repository.UserRepository;
+import com.example.javatlgbot.service.CryptoCurrencyService;
 import com.example.javatlgbot.service.CurrencyService;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private CurrencyModel currencyModel;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CryptoCurrencyService cryptoCurrencyService;
 
     @Override
     public String getBotUsername() {
@@ -77,6 +80,9 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
                 case "/help":
                     helpAnswer(chatId, userName);
+                    break;
+                case "/get_crypto":
+                    sendMessage(chatId, cryptoCurrencyService.loadCryptoCurrency());
                     break;
                 case "/music":
                     startMusic(chatId, userName);
@@ -199,7 +205,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
       }
         catch (Exception e){
-            log.error("The error occurred while saving the new User: " + e.getMessage());
+            log.error("The error occurred while search user or saving the new User: " + e.getMessage());
         }
 
     }

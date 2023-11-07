@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,8 +21,14 @@ import java.util.Scanner;
 @Slf4j
 public class CurrencyService {
 
+    public static String uri;
+
+    public CurrencyService(@Value("${currency_rate}") String uri) {
+        this.uri = uri;
+    }
+
     public static CurrencyModel getCurrencyRate(String message, CurrencyModel model) throws IOException, ParseException {
-        URL url = new URL("https://www.cbr-xml-daily.ru/daily_json.js");  // https://www.cbr-xml-daily.ru/#json
+        URL url = new URL(uri);
         Scanner scanner = new Scanner((InputStream) url.getContent());
         String jsonString = "";
         while (scanner.hasNext()) {

@@ -10,11 +10,14 @@ bot.name: newInfoJava_bot
 bot.token: ENC(YRtNKQERH8ViRyCbqCBhWo6DDmKQtiqazLKMDT0f6YMsYWmhmiNMscb03fYY3Y67Jr6fG1waEtI=)
 bot.ownerID: 994138843
 
+#https://www.cbr-xml-daily.ru/#json
+currency_rate: https://www.cbr-xml-daily.ru/daily_json.js
+#https://www.coingecko.com/api/documentation
+cryptocurrencies: https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,matic-network&vs_currencies=usd
+
 
 spring:
   datasource:
-    #url: jdbc:postgresql://db:5432/infoBot
-    #url: jdbc:postgresql://127.0.0.1:5432/infoBot
     url: jdbc:postgresql://${DB_HOST:127.0.0.1}:5432/infoBot
     username: postgres
     password: ENC(GSTv7LWJ0tOhw+chfitIkKnSUSsIFrnL)
