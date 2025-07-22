@@ -13,7 +13,6 @@ public class BotConfig {
     final private String token;
     final private Long ownerID;
 
-
     @Autowired
     public BotConfig(@Value("${bot.name}") String botName, @Value("${bot.token}") String token,
                      @Value("${bot.ownerID}") Long ownerID) {

@@ -4,6 +4,7 @@ import com.example.javatlgbot.config.BotConfig;
 import com.example.javatlgbot.model.CurrencyModel;
 import com.example.javatlgbot.model.User;
 import com.example.javatlgbot.repository.UserRepository;
+import com.example.javatlgbot.service.AIService;
 import com.example.javatlgbot.service.CryptoCurrencyService;
 import com.example.javatlgbot.service.CurrencyService;
 import com.vdurmont.emoji.EmojiParser;
@@ -43,6 +44,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private UserRepository userRepository;
     @Autowired
     private CryptoCurrencyService cryptoCurrencyService;
+    @Autowired
+    private AIService aiService;
 
     @Override
     public String getBotUsername() {
@@ -79,6 +82,9 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "/start":
                     startCommandReceived(chatId, userName);
                     registerUser(update.getMessage());
+                    break;
+                case "/ai":
+                    helpAI(chatId, userName);
                     break;
                 case "/help":
                     helpAnswer(chatId, userName);
@@ -120,23 +126,31 @@ public class TelegramBot extends TelegramLongPollingBot {
                             throw new IOException("The specified currency type was not found");
                         }
                     } catch (IOException e) {
-                        sendMessage(chatId, "We have not found such a currency." + "\n" +
-                                "Enter the currency whose official exchange rate" + "\n" +
-                                "you want to know in relation to RUB." + "\n" +
-                                "For example: USD, EUR or CNY");
-                        File sourceimage = new File("Ein2.jpg");
-                        InputFile img = new InputFile(sourceimage);
-                        currency = "And you don't like rock, blues and classical music... Well ok.." + "\n\n" +
-                                   "But Einstein looks at you reproachfully" + " :cry:";
-                        String answer = EmojiParser.parseToUnicode(currency);
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ex) {
-                            ex.printStackTrace();
-                            log.error("The error occurred while executing 'Thread.sleep': " + e.getMessage());
+                        // Check if this might be an AI request (not a currency)
+                        if (!messageText.equals("USD") && !messageText.equals("EUR") && !messageText.equals("CNY")) {
+                            // Process as AI request
+                            sendMessage(chatId, "🤖 Processing your request with AI...");
+                            String aiResponse = aiService.sendAIRequest(messageText);
+                            sendMessage(chatId, aiResponse);
+                        } else {
+                            sendMessage(chatId, "We have not found such a currency." + "\n" +
+                                    "Enter the currency whose official exchange rate" + "\n" +
+                                    "you want to know in relation to RUB." + "\n" +
+                                    "For example: USD, EUR or CNY");
+                            File sourceimage = new File("Ein2.jpg");
+                            InputFile img = new InputFile(sourceimage);
+                            currency = "And you don't like rock, blues and classical music... Well ok.." + "\n\n" +
+                                       "But Einstein looks at you reproachfully" + " :cry:";
+                            String answer = EmojiParser.parseToUnicode(currency);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                                log.error("The error occurred while executing 'Thread.sleep': " + e.getMessage());
+                            }
+                            sendMessage(chatId, answer);
+                            sendImg(chatId, img);
                         }
-                        sendMessage(chatId, answer);
-                        sendImg(chatId, img);
                         break;
                     } catch (ParseException e) {
                         log.error(String.valueOf(e.getStackTrace()));
@@ -166,6 +180,22 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendMessage(chatId, currency);
         }
 
+    }
+
+    private void helpAI(long chatId, String userName) {
+        String welcomeMessage = EmojiParser.parseToUnicode(
+            "🤖 Hello " + userName + "! I'm your AI assistant.\n\n" +
+            "💬 Please send me any question or message, and I'll respond using AI.\n\n" +
+            "✨ You can ask me about:\n" +
+            "• General knowledge questions\n" +
+            "• Programming help\n" +
+            "• Writing assistance\n" +
+            "• Problem solving\n" +
+            "• And much more!\n\n" +
+            "📝 Just type your message and I'll get back to you with an AI-powered response."
+        );
+        
+        sendMessage(chatId, welcomeMessage);
     }
 
     private void prepareAndSendMessage(Long chatId, String textToSend) {
@@ -232,7 +262,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                 "Enter the currency whose official exchange rate" + "\n" +
                 "you want to know in relation to RUB." + "\n" +
                 "For example: USD, EUR or CNY " + "\n\n" +
-                "But if you just want to listen to music, you can click '/music'" + " :grinning:");
+                "🎵 If you want to listen to music, click '/music'\n" +
+                "🤖 For AI assistance, click '/ai'" + " :grinning:");
 
         log.info("The name of the logged in user: " + name);
         sendMessage(chatId, answer);

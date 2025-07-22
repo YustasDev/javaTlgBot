@@ -5,22 +5,27 @@ jasypt:
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
 
 
-
 bot.name: newInfoJava_bot
 bot.token: ENC(YRtNKQERH8ViRyCbqCBhWo6DDmKQtiqazLKMDT0f6YMsYWmhmiNMscb03fYY3Y67Jr6fG1waEtI=)
 bot.ownerID: 994138843
+bot.system_prompt: "You are a useful intellectual assistant. Before giving an answer, search the Internet, if possible, for information relevant to the question. After that, give a detailed answer, which also includes URLs with links related to the question."
 
 #https://www.cbr-xml-daily.ru/#json
 currency_rate: https://www.cbr-xml-daily.ru/daily_json.js
 #https://www.coingecko.com/api/documentation
 cryptocurrencies: https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,matic-network&vs_currencies=usd
 
+# OpenRouter AI API Configuration
+openrouter:
+  api:
+    key: ENC(WTAzNvjYnv+RmuK1AWpJlO6+3SRvaOYdNktWyqxpWByFryiPqxLnA5dfpXdFHFA1GIKykicP6muwXjEBgeAeyWqK3JZj1EMVWEE/XQALg/8p8sXemiFVUA==)
+
 
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:127.0.0.1}:5432/infoBot
-    username: postgres
-    password: ENC(GSTv7LWJ0tOhw+chfitIkKnSUSsIFrnL)
+    username: postgres_1
+    password: ENC(qNbyx+cC3z4LCzFiuY70gr99BkIG4MsH)
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
