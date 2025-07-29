@@ -1,5 +1,13 @@
 package com.example.javatlgbot.runners;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 import com.example.javatlgbot.config.BotConfig;
 import com.example.javatlgbot.model.CurrencyModel;
 import com.example.javatlgbot.model.User;
@@ -8,8 +16,6 @@ import com.example.javatlgbot.service.AIService;
 import com.example.javatlgbot.service.CryptoCurrencyService;
 import com.example.javatlgbot.service.CurrencyService;
 import com.vdurmont.emoji.EmojiParser;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -22,14 +28,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 @Component
 @AllArgsConstructor
@@ -197,6 +199,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         
         sendMessage(chatId, welcomeMessage);
     }
+    
+
 
     private void prepareAndSendMessage(Long chatId, String textToSend) {
         SendMessage message = new SendMessage();
