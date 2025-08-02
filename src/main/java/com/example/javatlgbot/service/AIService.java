@@ -3,6 +3,7 @@ package com.example.javatlgbot.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,15 @@ public class AIService {
     @Value("${bot.system_prompt}")
     private String systemPrompt;
 
+    @Autowired
+    private WebSearchService webSearchService;
+
     private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
     private static final String[] MODELS = {
+        "microsoft/mai-ds-r1:free",
         "deepseek/deepseek-r1-0528:free",
-        "deepseek/deepseek-chat-v3-0324:free", 
-        "microsoft/mai-ds-r1:free"
+        "deepseek/deepseek-chat-v3-0324:free" 
+        
     };
     
     private static final HttpClient httpClient = HttpClient.newBuilder()
@@ -39,6 +44,12 @@ public class AIService {
             return "Please provide a message or question for me to help you with.";
         }
         
+        log.info("Processing AI request: {}", userMessage);
+        
+        // First, perform web search to get relevant information
+        String searchContext = webSearchService.getSearchContextForAI(userMessage);
+        log.info("Web search completed for query: {}", userMessage);
+        
         String finalResponse = null;
         String lastError = null;
         
@@ -46,7 +57,7 @@ public class AIService {
         for (String model : MODELS) {
             try {
                 log.info("Trying model: {}", model);
-                String requestBody = createRequestBody(userMessage, model);
+                String requestBody = createRequestBody(searchContext, model);
                 
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(OPENROUTER_URL))
@@ -63,7 +74,6 @@ public class AIService {
                     if (aiResponse != null && !aiResponse.trim().isEmpty()) {
                         finalResponse = aiResponse;
                         log.info("Successfully got response from model: {}", model);
-                        log.info("AI Response: {}", finalResponse);
                         break; // Success, exit the loop
                     } else {
                         lastError = "Empty response from model: " + model;

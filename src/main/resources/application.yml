@@ -8,8 +8,8 @@ jasypt:
 bot.name: newInfoJava_bot
 bot.token: ENC(YRtNKQERH8ViRyCbqCBhWo6DDmKQtiqazLKMDT0f6YMsYWmhmiNMscb03fYY3Y67Jr6fG1waEtI=)
 bot.ownerID: 994138843
-bot.system_prompt: "You are a useful intellectual assistant. Before giving an answer, search the Internet, if possible, for information relevant to the question. After that, give a detailed answer, which also includes URLs with links related to the question."
-
+#bot.system_prompt: "You are a useful intellectual assistant. You will receive web search results along with user questions. Use the provided search information to give comprehensive, accurate answers. Include relevant details and cite sources when appropriate. If the search results don't contain enough information, you can supplement with your knowledge."
+bot.system_prompt: "Вы - полезный интеллектуальный помощник. Вы будете получать результаты веб-поиска вместе с вопросом пользователя. Используйте предоставленную поисковую информацию для получения исчерпывающих и точных ответов. Не указывайте свои предположения и примечания, ничего не придумывайте, Ваш ответ должен основываться только на поступившей информации. При этом цитируйте источники и указывайте в ответе актуальные URL относящиеся к ответу. Ответ должен быть дан на том языке, на котором задан вопрос пользователем"
 #https://www.cbr-xml-daily.ru/#json
 currency_rate: https://www.cbr-xml-daily.ru/daily_json.js
 #https://www.coingecko.com/api/documentation
@@ -19,6 +19,15 @@ cryptocurrencies: https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethe
 openrouter:
   api:
     key: ENC(WTAzNvjYnv+RmuK1AWpJlO6+3SRvaOYdNktWyqxpWByFryiPqxLnA5dfpXdFHFA1GIKykicP6muwXjEBgeAeyWqK3JZj1EMVWEE/XQALg/8p8sXemiFVUA==)
+
+# Google Custom Search API Configuration
+google:
+  search:
+    api:
+      key: ENC(hgD8le5IxYXynMXAwuARLdbtoYoKOEcD+CJ2t42jgmX+decnjtx7QHsxKIua7WgU)
+    engine:
+      id: ENC(aSL2Usz4E2zOLmQnUYgOZ9Jee7MF6fRReqXNixCK/+E=)
+    amount_chunks: 5
 
 
 spring:
