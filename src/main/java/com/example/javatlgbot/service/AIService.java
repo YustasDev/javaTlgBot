@@ -29,10 +29,10 @@ public class AIService {
 
     private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
     private static final String[] MODELS = {
-        "microsoft/mai-ds-r1:free",
         "deepseek/deepseek-r1-0528:free",
-        "deepseek/deepseek-chat-v3-0324:free" 
-        
+        "deepseek/deepseek-chat-v3-0324:free",
+        "z-ai/glm-4.5-air:free",
+        "microsoft/mai-ds-r1:free"
     };
     
     private static final HttpClient httpClient = HttpClient.newBuilder()
