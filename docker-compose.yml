@@ -11,6 +11,9 @@ services:
       POSTGRES_PASSWORD: ${DB_postgres}
     volumes:
       - ./DB_infoBot/infoBot:/var/lib/postgresql/data
+    # backend runs in host network, so it reaches the DB via localhost
+    ports:
+      - "127.0.0.1:5432:5432"
     networks:
       - boto_net
     restart: always
@@ -29,10 +32,14 @@ services:
       HOST: db_javaBot
       PORT: 5432
       DB: infoBot
-      DB_HOST: db
+      DB_HOST: 127.0.0.1
       ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
-    networks:
-      - boto_net
+    # Telegram IPv4 addresses are unreachable from the server, IPv6 works.
+    # Host network gives the container IPv6; api.telegram.org is pinned to its
+    # IPv6 address so other services (e.g. cbr-xml-daily.ru, broken over IPv6) stay on IPv4.
+    network_mode: host
+    extra_hosts:
+      - "api.telegram.org:2001:67c:4e8:f004::9"
     restart: always
     depends_on:
        db:
