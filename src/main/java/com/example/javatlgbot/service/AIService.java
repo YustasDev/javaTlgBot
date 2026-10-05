@@ -18,8 +18,15 @@ import java.time.Duration;
 @Slf4j
 public class AIService {
 
-    @Value("${openrouter.api.key}")
+    @Value("${ai.api.key}")
     private String apiKey;
+
+    @Value("${ai.api.base_url}")
+    private String baseUrl;
+
+    // comma-separated in application.yml, tried in order
+    @Value("${ai.api.models}")
+    private String[] models;
 
     @Value("${bot.system_prompt}")
     private String systemPrompt;
@@ -27,14 +34,6 @@ public class AIService {
     @Autowired
     private WebSearchService webSearchService;
 
-    private static final String OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-    private static final String[] MODELS = {
-        "deepseek/deepseek-r1-0528:free",
-        "deepseek/deepseek-chat-v3-0324:free",
-        "z-ai/glm-4.5-air:free",
-        "microsoft/mai-ds-r1:free"
-    };
-    
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(30))
             .build();
@@ -54,13 +53,13 @@ public class AIService {
         String lastError = null;
         
         // Try each model in sequence
-        for (String model : MODELS) {
+        for (String model : models) {
             try {
                 log.info("Trying model: {}", model);
                 String requestBody = createRequestBody(searchContext, model);
                 
                 HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(OPENROUTER_URL))
+                        .uri(URI.create(baseUrl + "/chat/completions"))
                         .header("Authorization", "Bearer " + apiKey)
                         .header("Content-Type", "application/json")
                         .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -132,7 +131,7 @@ public class AIService {
                 }
             }
             
-            log.error("Unexpected response format from OpenRouter API: {}", responseBody);
+            log.error("Unexpected response format from AI API: {}", responseBody);
             return "Sorry, I received an unexpected response format. Please try again.";
             
         } catch (Exception e) {

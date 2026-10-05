@@ -15,10 +15,13 @@ currency_rate: https://www.cbr-xml-daily.ru/daily_json.js
 #https://www.coingecko.com/api/documentation
 cryptocurrencies: https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,matic-network&vs_currencies=usd
 
-# OpenRouter AI API Configuration
-openrouter:
+# AI API Configuration (RouterAI, OpenAI-compatible)
+ai:
   api:
-    key: ENC(WTAzNvjYnv+RmuK1AWpJlO6+3SRvaOYdNktWyqxpWByFryiPqxLnA5dfpXdFHFA1GIKykicP6muwXjEBgeAeyWqK3JZj1EMVWEE/XQALg/8p8sXemiFVUA==)
+    base_url: https://routerai.ru/api/v1
+    key: ENC(JRBSZa2sCKxQj+MZvH5oypXUL7UfhIpduJjq+GoyHFqco9r/NAyYjdWaZrqd1t1/)
+    # comma-separated, tried in order
+    models: stealth/space-bunny-alpha
 
 # Google Custom Search API Configuration
 google:
